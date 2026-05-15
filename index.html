@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бақытжан Ыбрашев — STEM портфолиосы</title>
+    
+    <!-- Fonts (Cyrillic-friendly) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --obsidian-black: #2a2520;
+            --charcoal-gray: #4a4338;
+            --bone-white: #fdfbf5;
+            --aged-paper: #fbf7ec;
+            --candlelight-amber: #b8893a;
+            --deep-burgundy: #a85560;
+            --weathered-silver: #c8c2b5;
+            --soft-cream: #f5efe1;
+            --warm-sand: #e8dfc8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--soft-cream);
+            color: var(--obsidian-black);
+            overflow-x: hidden;
+        }
+        
+        .gothic-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        
+        .handwritten {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            line-height: 1.35;
+        }
+        
+        .desk-surface {
+            background: linear-gradient(145deg, #f5efe1 0%, #ebe2cc 100%);
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .desk-surface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(184, 137, 58, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 96, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        
+        .polaroid {
+            position: absolute;
+            width: 200px;
+            height: 240px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .polaroid:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .polaroid.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .polaroid-front, .polaroid-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .polaroid-front {
+            background: #ffffff;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 6px 20px rgba(74, 67, 56, 0.12), 0 2px 4px rgba(74, 67, 56, 0.06);
+        }
+        
+        .polaroid-back {
+            background: #ffffff;
+            transform: rotateY(180deg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(74, 67, 56, 0.12), 0 2px 4px rgba(74, 67, 56, 0.06);
+        }
+        
+        .photo-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: sepia(8%) contrast(1.02) brightness(1.05);
+        }
+        
+        .photo-caption {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .photo-description {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .photo-date {
+            font-size: 11px;
+            color: #888;
+            margin-top: 10px;
+        }
+        
+        .control-panel {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 253, 247, 0.85);
+            backdrop-filter: blur(14px);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            z-index: 1000;
+            border: 1px solid rgba(184, 137, 58, 0.25);
+            box-shadow: 0 8px 30px rgba(74, 67, 56, 0.08);
+        }
+        
+        .control-btn {
+            background: transparent;
+            border: 2px solid var(--candlelight-amber);
+            color: var(--candlelight-amber);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background: var(--candlelight-amber);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(184, 137, 58, 0.3);
+        }
+        
+        .audio-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--candlelight-amber);
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(184, 137, 58, 0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--candlelight-amber);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 30px;
+            background: rgba(255, 253, 247, 0.85);
+            backdrop-filter: blur(14px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(184, 137, 58, 0.25);
+            box-shadow: 0 8px 30px rgba(74, 67, 56, 0.08);
+        }
+        
+        .nav-link {
+            color: var(--obsidian-black);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--candlelight-amber);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--candlelight-amber);
+            border-radius: 1px;
+        }
+        
+        .title-section {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .main-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--obsidian-black) 0%, var(--candlelight-amber) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.75;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: var(--charcoal-gray);
+            text-wrap: pretty;
+        }
+
+        .eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--candlelight-amber);
+            margin-bottom: 14px;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 160px;
+            border-radius: 4px;
+            background-image:
+                repeating-linear-gradient(135deg,
+                    rgba(184, 137, 58, 0.10) 0,
+                    rgba(184, 137, 58, 0.10) 6px,
+                    rgba(184, 137, 58, 0.04) 6px,
+                    rgba(184, 137, 58, 0.04) 12px);
+            background-color: var(--warm-sand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .photo-placeholder span {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: rgba(74, 67, 56, 0.7);
+            text-transform: lowercase;
+            line-height: 1.4;
+        }
+        
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .polaroid {
+                width: 150px;
+                height: 180px;
+            }
+            
+            .photo-image {
+                height: 120px;
+            }
+            
+            .control-panel {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            
+            .control-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .navigation {
+                gap: 20px;
+                padding: 12px 20px;
+            }
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--soft-cream);
+            color: var(--obsidian-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(184, 137, 58, 0.2);
+            border-top: 3px solid var(--candlelight-amber);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ---- Lightbox ---- */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(42, 37, 32, 0.78);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            padding: 24px;
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-card {
+            background: #ffffff;
+            width: min(880px, 100%);
+            max-height: 90vh;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.96);
+            transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+        }
+
+        .lightbox.open .lightbox-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .lightbox-media {
+            background: var(--warm-sand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+        }
+
+        .lightbox-media image-slot {
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+        }
+
+        .lightbox-body {
+            padding: 36px 34px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .lightbox-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--candlelight-amber);
+        }
+
+        .lightbox-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            line-height: 1.2;
+            color: var(--obsidian-black);
+            margin: 0;
+        }
+
+        .lightbox-meta {
+            font-size: 0.92rem;
+            color: var(--charcoal-gray);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            border-top: 1px solid rgba(74, 67, 56, 0.12);
+            border-bottom: 1px solid rgba(74, 67, 56, 0.12);
+            padding: 12px 0;
+        }
+
+        .lightbox-meta span + span::before {
+            content: '·';
+            margin-right: 14px;
+            color: var(--candlelight-amber);
+        }
+
+        .lightbox-desc {
+            font-size: 1.02rem;
+            line-height: 1.55;
+            color: var(--obsidian-black);
+            margin: 0;
+            text-wrap: pretty;
+        }
+
+        .lightbox-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .lightbox-tag {
+            font-size: 0.74rem;
+            font-weight: 500;
+            color: var(--candlelight-amber);
+            border: 1px solid rgba(184, 137, 58, 0.4);
+            border-radius: 999px;
+            padding: 4px 12px;
+            letter-spacing: 0.04em;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 22px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 253, 247, 0.92);
+            border: 1px solid rgba(184, 137, 58, 0.35);
+            color: var(--obsidian-black);
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+            z-index: 2;
+        }
+
+        .lightbox-close:hover {
+            background: var(--candlelight-amber);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 253, 247, 0.92);
+            border: 1px solid rgba(184, 137, 58, 0.35);
+            color: var(--obsidian-black);
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--candlelight-amber);
+            color: #fff;
+        }
+
+        .lightbox-prev { left: 28px; }
+        .lightbox-next { right: 28px; }
+
+        @media (max-width: 720px) {
+            .lightbox-card {
+                grid-template-columns: 1fr;
+                max-height: 92vh;
+            }
+            .lightbox-media { min-height: 240px; }
+            .lightbox-media image-slot { min-height: 240px; }
+            .lightbox-body { padding: 24px 22px; }
+            .lightbox-title { font-size: 1.35rem; }
+            .lightbox-nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="gothic-title text-xl">Галерея дайындалуда...</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <a href="index.html" class="nav-link active">Галерея</a>
+        <a href="characters.html" class="nav-link">Сабақтар</a>
+        <a href="about.html" class="nav-link">Мен туралы</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="desk-surface">
+        <!-- Particle Container -->
+        <div class="particle-container" id="particleContainer"></div>
+        
+        <!-- Title Section -->
+        <div class="title-section">
+            <p class="eyebrow">Ұстаздың портфолиосы</p>
+            <h1 class="main-title gothic-title">Ыбрашев Бақытжан Махсұтұлы</h1>
+            <p class="subtitle">Информатика мұғалімі, STEM-педагог, NXplorers тренері. Сабақтар, жобалар мен жүлделі сәттердің полароидтық альбомы.</p>
+        </div>
+        
+        <!-- Polaroid Photos Container -->
+        <div id="polaroidContainer"></div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <button class="control-btn" id="shuffleBtn">Араластыру</button>
+        <button class="control-btn" id="gridBtn">Тор</button>
+        <button class="control-btn" id="stackBtn">Үйінді</button>
+        <button class="control-btn" id="timelineBtn">Хронология</button>
+        
+        <div class="audio-control">
+            <span>🔊</span>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30">
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="ambientAudio" loop>
+        <source src="resources/gothic_ambient.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="flipSound">
+        <source src="resources/paper_flip.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Алдыңғы">‹</button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Келесі">›</button>
+        <button class="lightbox-close" id="lightboxClose" aria-label="Жабу">✕</button>
+        <div class="lightbox-card" id="lightboxCard">
+            <div class="lightbox-media" id="lightboxMedia"></div>
+            <div class="lightbox-body">
+                <span class="lightbox-eyebrow" id="lightboxEyebrow"></span>
+                <h2 class="lightbox-title" id="lightboxTitle"></h2>
+                <div class="lightbox-meta" id="lightboxMeta"></div>
+                <p class="lightbox-desc" id="lightboxDesc"></p>
+                <div class="lightbox-tags" id="lightboxTags"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="image-slot.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

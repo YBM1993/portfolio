@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мен туралы — Ыбрашев Бақытжан Махсұтұлы</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="image-slot.js"></script>
+
+    <style>
+        :root {
+            --obsidian-black: #2a2520;
+            --charcoal-gray: #4a4338;
+            --bone-white: #fdfbf5;
+            --aged-paper: #fbf7ec;
+            --candlelight-amber: #b8893a;
+            --deep-burgundy: #a85560;
+            --soft-cream: #f5efe1;
+            --warm-sand: #e8dfc8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--soft-cream);
+            color: var(--obsidian-black);
+            overflow-x: hidden;
+        }
+
+        .gothic-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .handwritten { font-family: 'Caveat', cursive; }
+
+        .main-background {
+            background: linear-gradient(145deg, #f5efe1 0%, #ebe2cc 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .main-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(184, 137, 58, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 96, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 30px;
+            background: rgba(255, 253, 247, 0.85);
+            backdrop-filter: blur(14px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(184, 137, 58, 0.25);
+            box-shadow: 0 8px 30px rgba(74, 67, 56, 0.08);
+        }
+
+        .nav-link {
+            color: var(--obsidian-black);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover { color: var(--candlelight-amber); }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--candlelight-amber);
+            border-radius: 1px;
+        }
+
+        .eyebrow {
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--candlelight-amber);
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--obsidian-black) 0%, var(--candlelight-amber) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-section {
+            background: #ffffff;
+            border: 1px solid rgba(184, 137, 58, 0.18);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 6px 24px rgba(74, 67, 56, 0.06);
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--candlelight-amber);
+            margin-bottom: 22px;
+            font-weight: 600;
+        }
+
+        .text-content {
+            line-height: 1.75;
+            font-size: 1.05rem;
+            margin-bottom: 18px;
+            color: var(--charcoal-gray);
+            text-wrap: pretty;
+        }
+
+        .highlight-text {
+            color: var(--candlelight-amber);
+            font-weight: 500;
+        }
+
+        /* Profile hero */
+        .profile-hero {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 36px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background-image:
+                repeating-linear-gradient(135deg,
+                    rgba(184, 137, 58, 0.12) 0,
+                    rgba(184, 137, 58, 0.12) 8px,
+                    rgba(184, 137, 58, 0.04) 8px,
+                    rgba(184, 137, 58, 0.04) 16px);
+            background-color: var(--warm-sand);
+            border: 3px solid var(--candlelight-amber);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(74, 67, 56, 0.10);
+        }
+
+        .profile-avatar span {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 11px;
+            color: rgba(74, 67, 56, 0.65);
+            line-height: 1.45;
+        }
+
+        .profile-name {
+            font-size: 2.1rem;
+            margin-bottom: 8px;
+            color: var(--obsidian-black);
+            line-height: 1.15;
+        }
+
+        .profile-tagline {
+            font-size: 1.1rem;
+            color: var(--candlelight-amber);
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 28px;
+            font-size: 0.95rem;
+            color: var(--charcoal-gray);
+        }
+
+        .profile-meta div span:first-child {
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--candlelight-amber);
+            margin-bottom: 4px;
+        }
+
+        /* Roles grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            margin-top: 26px;
+        }
+
+        .feature-card {
+            background: rgba(184, 137, 58, 0.06);
+            border: 1px solid rgba(184, 137, 58, 0.20);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--candlelight-amber);
+        }
+
+        .feature-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--candlelight-amber);
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            color: var(--obsidian-black);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-description {
+            line-height: 1.6;
+            color: var(--charcoal-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Tags */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0;
+        }
+
+        .tech-item {
+            background: rgba(184, 137, 58, 0.12);
+            color: var(--candlelight-amber);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(184, 137, 58, 0.30);
+            font-weight: 500;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-top: 6px;
+        }
+
+        .stat-box {
+            background: rgba(184, 137, 58, 0.06);
+            border: 1px solid rgba(184, 137, 58, 0.20);
+            border-radius: 12px;
+            padding: 22px 18px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--candlelight-amber);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--charcoal-gray);
+            letter-spacing: 0.04em;
+            line-height: 1.4;
+        }
+
+        /* Quote */
+        .quote-section {
+            background: rgba(184, 137, 58, 0.08);
+            padding: 26px 28px;
+            border-radius: 12px;
+            border-left: 4px solid var(--candlelight-amber);
+            margin: 24px 0 8px;
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            line-height: 1.55;
+            margin-bottom: 12px;
+            font-family: 'Playfair Display', serif;
+            color: var(--obsidian-black);
+            font-style: italic;
+        }
+
+        .quote-attribution {
+            text-align: right;
+            opacity: 0.75;
+            font-size: 0.95rem;
+            color: var(--charcoal-gray);
+        }
+
+        /* Achievements table */
+        .achievements-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .achievements-list li {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(184, 137, 58, 0.18);
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            gap: 18px;
+            align-items: baseline;
+        }
+
+        .achievements-list li:last-child { border-bottom: none; }
+
+        .ach-year {
+            font-family: 'Playfair Display', serif;
+            color: var(--candlelight-amber);
+            font-weight: 700;
+        }
+
+        .ach-title {
+            color: var(--obsidian-black);
+            line-height: 1.5;
+        }
+
+        .ach-title em {
+            display: block;
+            font-style: normal;
+            color: var(--charcoal-gray);
+            font-size: 0.9rem;
+            margin-top: 4px;
+            opacity: 0.85;
+        }
+
+        .ach-result {
+            color: var(--candlelight-amber);
+            font-weight: 500;
+            text-align: right;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        /* Contact */
+        .contact-info {
+            background: rgba(184, 137, 58, 0.08);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(184, 137, 58, 0.25);
+            text-align: center;
+        }
+
+        .contact-link {
+            color: var(--candlelight-amber);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            border-bottom: 1px dashed rgba(184, 137, 58, 0.4);
+        }
+
+        .contact-link:hover { opacity: 0.75; }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 18px;
+            font-size: 1.05rem;
+        }
+
+        .contact-cap {
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--candlelight-amber);
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .content-section { padding: 26px; }
+            .profile-hero { grid-template-columns: 1fr; text-align: center; }
+            .profile-avatar { margin: 0 auto; width: 180px; height: 180px; }
+            .profile-meta { justify-content: center; }
+            .achievements-list li {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            .ach-result { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navigation">
+        <a href="index.html" class="nav-link">Галерея</a>
+        <a href="characters.html" class="nav-link">Сабақтар</a>
+        <a href="about.html" class="nav-link active">Мен туралы</a>
+    </nav>
+
+    <div class="main-background">
+        <div class="container mx-auto px-6 py-24" style="max-width: 1000px;">
+            <p class="eyebrow">Ұстаздың портфолиосы</p>
+            <h1 class="page-title gothic-title">Мен туралы</h1>
+
+            <!-- Profile hero -->
+            <div class="content-section">
+                <div class="profile-hero">
+                    <div class="profile-avatar-wrap" aria-label="Ұстаздың фотосуреті">
+                        <image-slot id="profile-avatar" shape="circle" placeholder="Портрет суретін апарыңыз" src="resources/images/profile-avatar.webp" style="width:220px;height:220px;border:3px solid var(--candlelight-amber);box-shadow:0 8px 24px rgba(74, 67, 56, 0.10);"></image-slot>
+                    </div>
+                    <div>
+                        <h2 class="profile-name gothic-title">Ыбрашев Бақытжан Махсұтұлы</h2>
+                        <p class="profile-tagline">Информатика пәнінің мұғалімі · STEM-педагог · блогер</p>
+                        <div class="profile-meta">
+                            <div>
+                                <span>Мектеп</span>
+                                <span>Төле би атындағы орта мектебі</span>
+                            </div>
+                            <div>
+                                <span>Аудан</span>
+                                <span>Еңбекшіқазақ</span>
+                            </div>
+                            <div>
+                                <span>Облыс</span>
+                                <span>Алматы</span>
+                            </div>
+                            <div>
+                                <span>TikTok</span>
+                                <span>@mr.agai</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Сәлеметсіз бе!</h2>
+                <p class="text-content">
+                    Менің атым — <span class="highlight-text">Ыбрашев Бақытжан Махсұтұлы</span>. Алматы облысы, Еңбекшіқазақ ауданындағы <span class="highlight-text">Төле би атындағы орта мектебінде</span> информатика пәнінен сабақ беремін. Балалармен қатар STEM, робототехника және IT-жобалар бойынша жұмыс жасаймын.
+                </p>
+                <p class="text-content">
+                    Сабақтан тыс — <span class="highlight-text">@mr.agai</span> деген атпен TikTok-та STEM-блог жүргіземін: ғылымды, технологияны жастар үшін трендке айналдыруға тырысамын. Бүгінде блогты <span class="highlight-text">49 600-ден астам адам</span> бақылайды, бейнероликтер <span class="highlight-text">1 миллионнан астам лайк</span> жинады.
+                </p>
+                <p class="text-content">
+                    Сонымен қатар <span class="highlight-text">NXplorers</span> бағдарламасының (Shell Kazakhstan · Дарын · Caravan of Knowledge) тренеріміз — «Жасыл ұрпақ бәйгесі» аясында балаларды экожобалармен таныстырамыз. Almaty Tech Cup сияқты алаңдарда спикер ретінде сөйлеймін.
+                </p>
+
+                <div class="quote-section">
+                    <p class="quote-text">«Ғылымды жастар тілінде сөйлету керек — сонда ғана ол кейінгі ұрпаққа жетеді.»</p>
+                    <p class="quote-attribution">— ұстаздық ұстанымым</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Бір қарағанда</h2>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">49.6K</div>
+                        <div class="stat-label">TikTok жазылушы<br>@mr.agai</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">1M+</div>
+                        <div class="stat-label">блогтағы лайк</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">7+</div>
+                        <div class="stat-label">жүлделі шәкірт<br>2024–2026</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">700K тг</div>
+                        <div class="stat-label">CodiPlay команда<br>ұтыс қоры</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roles -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Кәсіби қызметім</h2>
+                <p class="text-content">
+                    Бір мектептегі пән мұғалімінен бөлек, әр қыры бар жұмыспен айналысамын. Әр рөл — бір-бірін толықтырады.
+                </p>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-number">01</div>
+                        <h3 class="feature-title">Информатика және STEM мұғалімі</h3>
+                        <p class="feature-description">
+                            Төле би атындағы мектепте пән мұғалімі ретіндегі негізгі жұмысым. Сабақтарда жобалық тәсіл басым.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">02</div>
+                        <h3 class="feature-title">STEM-блогер @mr.agai</h3>
+                        <p class="feature-description">
+                            TikTok-тағы білім беру блогы. 49 600 жазылушы, 1 миллион лайк. Ғылымды балалар тілінде түсіндіремін.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">03</div>
+                        <h3 class="feature-title">NXplorers тренері</h3>
+                        <p class="feature-description">
+                            «Жасыл ұрпақ бәйгесі» бағдарламасы — Shell Kazakhstan, Дарын, Caravan of Knowledge. Сертификат № Nxpl-2025-St-104.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">04</div>
+                        <h3 class="feature-title">Робототехника жетекшісі</h3>
+                        <p class="feature-description">
+                            Команда дайындау, KazRobotics, технотворчество жарыстарына қатысу. Шәкірттер республикалық деңгейде көрінеді.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">05</div>
+                        <h3 class="feature-title">Спикер</h3>
+                        <p class="feature-description">
+                            Almaty Tech Cup — «STEM-блогер: ғылымды трендке айналдыр!» баяндамасы. Тамыз кеңесінің панелистрі.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">06</div>
+                        <h3 class="feature-title">CodiPlay ментор</h3>
+                        <p class="feature-description">
+                            «Болашақ жобасы» байқауында екі команданың (Moodflower, Greenbox) наставнигі. I және II орын.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher achievements -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Мұғалім ретіндегі жетістіктерім</h2>
+                <ul class="achievements-list">
+                    <li>
+                        <span class="ach-year">2026</span>
+                        <span class="ach-title">«Үздік информатика пән мұғалімі — 2026» аудандық олимпиадасы<em>Еңбекшіқазақ ауданы</em></span>
+                        <span class="ach-result">II орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">«STEM-педагог» республикалық байқауы<em>ӨРЛЕУ, Алматы қаласы</em></span>
+                        <span class="ach-result">III орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">«Педагогикалық идеялар панорамасы» республикалық байқауының аймақтық кезеңі<em>«Цифрлық сауаттылық» номинациясы · ӨРЛЕУ, Алматы облысы · тіркеу № 25DUBGE</em></span>
+                        <span class="ach-result">III орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Аудандық ғылыми жоба, информатика саласы<em>Еңбекшіқазақ ауданы · жоба жетекшісі</em></span>
+                        <span class="ach-result">II орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">«BilimClass супер сыныбы» республикалық байқауы<em>Алматы облысы</em></span>
+                        <span class="ach-result">Алғыс хат</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">CodiPlay «Болашақ жобасы» — «Moodflower» командасының менторы<em>I орын · Кореяға сапар</em></span>
+                        <span class="ach-result">Сертификат</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">CodiPlay «Болашақ жобасы» — «Greenbox» командасының менторы<em>II орын</em></span>
+                        <span class="ach-result">Сертификат</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Student achievements -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Шәкірттерімнің жетістіктері</h2>
+                <p class="text-content">
+                    Мұғалімнің ең үлкен мақтанышы — шәкірттерінің жеңісі. Соңғы екі жылдағы ең қуанышты сәттер:
+                </p>
+                <ul class="achievements-list">
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Орынбас Ақжан, Ақжол Інжу (9-сынып, Таутүрген мектебі)<em>CodiPlay «Болашақ жобасы» · «Үздік креативті бейне» номинациясы · «Moodflower» командасы</em></span>
+                        <span class="ach-result">I орын · 500 000 ₸</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Лазгиев Онур, Гаврилин Данил (9-сынып, Төле би мектебі)<em>CodiPlay «Болашақ жобасы» · «Үздік техникалық жоба» номинациясы · «Greenbox» командасы</em></span>
+                        <span class="ach-result">II орын · 200 000 ₸</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Гаврилин Даниил<em>Shell NXplorers / Дарын — «Жасыл ұрпақ бәйгесі» (экожобалар)</em></span>
+                        <span class="ach-result">Жеңімпаз</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Төлен Нүртілек<em>«Ұлы өнертапқыштыққа алғашқы қадам» инновациялық идеялардың облыстық байқауы · «Құрылыс облысындағы жобалар» номинациясы · Қонаев</em></span>
+                        <span class="ach-result">I орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2026</span>
+                        <span class="ach-title">Сүлейманов Ілияс<em>Техникалық шығармашылық және өнертапқыштардың облыстық жарысы · «Радиомен басқарылатын көлік» (1:10, РЦБ класы)</em></span>
+                        <span class="ach-result">II орын</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2024</span>
+                        <span class="ach-title">Гаврилин Даниил Николаевич<em>KazRobo Project 2024 — республикалық ғылыми-техникалық жобалар байқауы (KazRobotics)</em></span>
+                        <span class="ach-result">Сертификат</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2023</span>
+                        <span class="ach-title">«Туған өлкем — тұғырым» онлайн бейнематериалдар байқауы<em>almobl_jastary, Алматы облысы</em></span>
+                        <span class="ach-result">Жеңімпаз</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Public activity -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Қоғамдық белсенділігім</h2>
+                <p class="text-content">
+                    Мектеп қабырғасынан тыс — STEM мәдениетін насихаттаумен, ұстаздар арасында тәжірибе бөлісумен айналысамын.
+                </p>
+                <ul class="achievements-list">
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Almaty Tech Cup спикері<em>«STEM-блогер: ғылымды трендке айналдыр!» баяндамасы</em></span>
+                        <span class="ach-result">Спикер</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">2025</span>
+                        <span class="ach-title">Алматы облысының педагогтерінің тамыз кеңесі<em>Қаскелең қаласы, «Жайлы мектеп» · 19 тамыз 2025</em></span>
+                        <span class="ach-result">Панелист</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">—</span>
+                        <span class="ach-title">Crazy Steam Ideas іс-шарасы<em>Chevron · Caravan of Knowledge · MakerSpace · Zertте Studio</em></span>
+                        <span class="ach-result">Қатысу</span>
+                    </li>
+                    <li>
+                        <span class="ach-year">—</span>
+                        <span class="ach-title">TikTok @mr.agai — STEM-блог<em>49 600 жазылушы · 1 миллионнан астам лайк</em></span>
+                        <span class="ach-result">Автор</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Methods / tags -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Қолданатын әдістер мен бағыттар</h2>
+                <div class="tech-stack">
+                    <span class="tech-item">STEM-білім</span>
+                    <span class="tech-item">Жобалық оқыту</span>
+                    <span class="tech-item">Робототехника</span>
+                    <span class="tech-item">Python / Scratch</span>
+                    <span class="tech-item">Сын тұрғысынан ойлау</span>
+                    <span class="tech-item">NXplorers әдістемесі</span>
+                    <span class="tech-item">CodiPlay</span>
+                    <span class="tech-item">Цифрлық сауаттылық</span>
+                    <span class="tech-item">Бейне-блогинг</span>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="content-section">
+                <h2 class="section-subtitle gothic-title">Байланыс</h2>
+                <div class="contact-info">
+                    <p class="text-content mb-2">
+                        Ынтымақтастық, баяндама шақыруы немесе тәжірибе алмасу қажет болса — қуана хабарласыңыз.
+                    </p>
+                    <div class="contact-row">
+                        <div>
+                            <div class="contact-cap">TikTok</div>
+                            <a class="contact-link" href="https://www.tiktok.com/@mr.agai" target="_blank" rel="noopener">@mr.agai</a>
+                        </div>
+                        <div>
+                            <div class="contact-cap">Мектеп</div>
+                            <span>Төле би атындағы орта мектеп</span>
+                        </div>
+                        <div>
+                            <div class="contact-cap">Аймақ</div>
+                            <span>Алматы облысы, Еңбекшіқазақ ауданы</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.content-section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: entry.target,
+                            opacity: [0, 1],
+                            translateY: [40, 0],
+                            duration: 600,
+                            easing: 'easeOutQuad'
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            sections.forEach(s => {
+                s.style.opacity = '0';
+                observer.observe(s);
+            });
+        });
+    </script>
+</body>
+</html>
