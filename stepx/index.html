@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101714">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="StepX — тест шагомера: деморежим, датчик телефона и подключение браслета в совместимом браузере.">
+  <title>StepX — ваш ритм</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<svg class="svg-library" aria-hidden="true"><defs>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4" r="2"/><path d="m7 21 3-6-1-5 4-3 3 5 4 1M5 12l4-2m4 3 2 4v4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h8m4 0h4M4 17h3m4 0h9"/><circle cx="14" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+  <symbol id="i-bt" viewBox="0 0 24 24"><path d="m6 7 12 10-6 5V2l6 5L6 17"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 19V9m7 10V4m7 15v-7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4m-3 14h2"/></symbol>
+</defs></svg>
+<div class="shell">
+  <aside class="sidebar">
+    <a href="#today" class="brand" aria-label="StepX, главная"><span class="brand-mark"><svg><use href="#i-walk"/></svg></span>stepx<span class="brand-dot">.</span></a>
+    <div class="sidebar-caption">ДВИЖЕНИЕ — ЭТО ВЫ</div>
+    <nav aria-label="Разделы"><button class="nav-link active" data-tab="today"><svg><use href="#i-walk"/></svg>Сегодня</button><button class="nav-link" data-tab="history"><svg><use href="#i-chart"/></svg>История</button></nav>
+    <div class="sidebar-bottom"><span class="small-dot"></span>Веб-прототип <span>01</span></div>
+  </aside>
+  <main>
+    <header class="topbar"><div><p id="date-label" class="eyebrow"></p><h1 id="page-title">Ваш ритм<span>.</span></h1></div><button id="settings-open" class="icon-button" aria-label="Настроить дневную цель"><svg><use href="#i-settings"/></svg></button></header>
+    <div class="mode-banner"><span id="mode-badge" class="mode-badge">ДЕМО</span><span id="mode-description">Пример данных · можно протестировать интерфейс</span><button id="source-open">Изменить <span aria-hidden="true">↗</span></button></div>
+    <p id="storage-warning" class="notice" role="alert" hidden>Браузер не разрешил сохранить данные. В этой вкладке всё работает, но после закрытия история может потеряться.</p>
+    <section id="today-view" aria-label="Шаги за сегодня">
+      <div class="dashboard-grid">
+        <article class="hero-card">
+          <div class="card-top"><span class="eyebrow">ШАГИ СЕГОДНЯ</span><span id="goal-status" class="pill">В своём темпе</span></div>
+          <div class="ring-wrap"><svg viewBox="0 0 300 300" class="progress-ring" aria-hidden="true"><circle class="ring-track" cx="150" cy="150" r="132"/><circle id="ring-progress" class="ring-fill" cx="150" cy="150" r="132" pathLength="100"/></svg><div class="ring-content"><svg class="walking-icon"><use href="#i-walk"/></svg><strong id="step-count">0</strong><span>из <span id="goal-label">8 000</span> шагов</span></div></div>
+          <div class="hero-bottom"><span id="motivator">Каждый шаг имеет значение</span><span id="percent-label">0%</span></div>
+          <div class="goal-track"><div id="goal-fill"></div></div>
+        </article>
+        <div class="right-column">
+          <article class="connection-card"><div class="card-top"><span class="eyebrow">ИСТОЧНИК ШАГОВ</span><span id="connection-dot" class="status-dot"></span></div><div class="source-title"><span class="device-icon"><svg id="source-icon"><use href="#i-walk"/></svg></span><div><h2 id="source-title">Попробуйте StepX</h2><p id="connection-status" role="status">Браслет не требуется</p></div></div><p id="source-help">Запустите виртуальную прогулку и посмотрите, как меняется ваш прогресс.</p><button id="primary-action" class="primary-button">Начать прогулку <svg><use href="#i-arrow"/></svg></button><button id="add-steps" class="secondary-button">+100 тестовых шагов</button><p id="sync-label" class="microcopy">Тестовые шаги хранятся отдельно от настоящих.</p></article>
+          <article class="note-card"><span class="note-number">01 / ШАГ ЗА ШАГОМ</span><h2 id="tip-title">Найдите свой темп.</h2><p id="tip-copy">Начните с небольшой прогулки. Сегодня важен следующий шаг, а не рекорд.</p><div class="path-art" aria-hidden="true"><svg viewBox="0 0 300 65"><path d="M-10 45C35 45 25 10 80 10s30 45 85 45 30-45 85-45 35 35 70 35"/><circle cx="180" cy="51" r="6"/></svg></div></article>
+        </div>
+      </div>
+      <details id="bracelet-guide" class="guide-card" open><summary>Как подключить плату к iPhone</summary><ol><li>На Windows загрузите <a href="./StepX-firmware.zip" download>прошивку StepX</a> в XIAO Sense через Arduino IDE. В мониторе порта должно быть <code>IMU started!</code>.</li><li>Установите <a href="https://apps.apple.com/app/id1492822055" target="_blank" rel="noopener noreferrer">Bluefy из App Store ↗</a> и откройте эту же ссылку сайта внутри Bluefy.</li><li>Включите Bluetooth и питание платы. На сайте нажмите «Подключить браслет», разрешите доступ и выберите <strong>XIAO StepX</strong>.</li><li>Подождите 2 секунды, пройдите 20 шагов и сравните счётчик. Сопряжение в настройках iPhone обычно не требуется.</li></ol><p>Для веб-теста Mac не нужен. У обычной XIAO nRF52840 нет встроенного датчика движения — нужна версия Sense или внешний датчик.</p></details>
+      <article class="week-card"><div class="section-heading"><div><p class="eyebrow">МАЛЕНЬКИЕ ШАГИ, БОЛЬШИЕ ПЕРЕМЕНЫ</p><h2>Ваша неделя</h2></div><button class="text-button" data-tab="history">Вся история <span aria-hidden="true">↗</span></button></div><div id="week-chart" class="week-chart" aria-label="Количество шагов за последние семь дней"></div><div class="week-footer"><span>За 7 дней <strong id="week-total">0 шагов</strong></span><span id="week-note">Демонстрационные данные</span></div></article>
+    </section>
+    <section id="history-view" hidden aria-label="История шагов"><article class="history-card"><div class="section-heading"><div><p class="eyebrow" id="history-source-label">ДЕМОРЕЖИМ</p><h2>День за днём</h2></div><button id="export-data" class="text-button">Скачать CSV ↗</button></div><div id="history-list"></div><p class="microcopy">История сохраняется в этом браузере. Режимы «Демо», «Телефон» и «Браслет» ведут отдельные счётчики.</p></article></section>
+    <footer><span>stepx. <span class="footer-light">Двигайтесь в своём ритме.</span></span><span>Тестовая версия</span></footer>
+  </main>
+</div>
+<dialog id="settings-dialog"><form id="goal-form"><div class="dialog-heading"><h2>Ваша дневная цель</h2><button type="button" class="close-dialog" aria-label="Закрыть">×</button></div><p>Начните с числа, которое подходит именно вам.</p><label for="goal-input">Шагов в день</label><input id="goal-input" type="number" inputmode="numeric" min="1000" max="50000" step="100" required><div class="goal-presets"><button type="button" data-goal="5000">5 000</button><button type="button" data-goal="8000">8 000</button><button type="button" data-goal="10000">10 000</button></div><button class="primary-button" type="submit">Сохранить цель <span aria-hidden="true">↗</span></button></form></dialog>
+<dialog id="source-dialog"><div class="dialog-heading"><h2>Как считаем шаги?</h2><button type="button" class="close-dialog" aria-label="Закрыть">×</button></div><p>Выберите режим для проверки.</p><div class="source-options"><button data-mode="demo"><span class="option-icon">↗</span><span><strong>Демо-прогулка</strong><small>Виртуальные шаги, без датчиков</small></span><span class="option-arrow">→</span></button><button data-mode="phone"><svg><use href="#i-phone"/></svg><span><strong>Датчик телефона</strong><small>Экспериментальный подсчёт на iPhone</small></span><span class="option-arrow">→</span></button><button data-mode="bracelet"><svg><use href="#i-bt"/></svg><span><strong>Браслет XIAO</strong><small>Прошивка StepX и Web Bluetooth</small></span><span class="option-arrow">→</span></button></div><p class="microcopy">В обычном Safari Bluetooth недоступен. Для проверки браслета откройте сайт в совместимом BLE-браузере или Chrome/Edge на компьютере.</p></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
