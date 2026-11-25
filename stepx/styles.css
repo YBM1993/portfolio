@@ -35,3 +35,15 @@ th,td.date-cell{font-size:12px}td{font-size:14px}td.time-cell{font-size:16px}
 footer small,footer>a{font-size:12px}.microcopy{font-size:14px}.toast{font-size:14px}}
 
 @media(max-width:650px){.brand small{font-size:12px;letter-spacing:.25px}.brand{font-size:23px;gap:10px}.intro{margin-bottom:20px}.timer-area{margin-top:8px}}
+
+.turn-settings{padding-top:12px;border-top:1px solid var(--border);margin-top:5px}
+.turn-settings .microcopy{margin-top:0;font-size:12px}
+.turn-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.turn-metrics>div{background:#082b38;border:1px solid var(--border);padding:16px;border-radius:12px;min-width:0}
+.turn-metrics span{font-size:14px;color:var(--muted);display:block}.turn-metrics strong{font:500 30px "JetBrains Mono",monospace;color:var(--teal-light);display:block;margin-top:8px;overflow-wrap:anywhere}
+.sensor-status{font-size:14px;color:var(--teal-light);line-height:1.7}.sensor-status.fault{color:#ffad91}
+.final-check{display:flex;align-items:flex-start;gap:10px;color:var(--text);line-height:1.6;margin-top:14px;font-size:14px}
+.final-check input{width:22px;min-width:22px;min-height:22px;accent-color:var(--teal);margin-top:2px}
+.timer-actions{margin-top:18px}#calibrate{color:var(--teal-light);width:100%;justify-content:center}
+#turn-help{margin-bottom:16px}
+@media(max-width:360px){.turn-metrics{gap:8px}.turn-metrics>div{padding:12px}.turn-metrics strong{font-size:24px}.brand small{font-size:10px}}

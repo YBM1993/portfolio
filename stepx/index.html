@@ -7,7 +7,7 @@
 <meta name="description" content="SwimBand — простой секундомер для плавания с BLE-браслетом. Старт, финиш и история результатов.">
 <title>SwimBand — секундомер для плавания</title>
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=swim1">
+<link rel="stylesheet" href="./styles.css?v=turn2">
 </head>
 <body>
 <svg class="svg-defs" aria-hidden="true"><defs>
@@ -19,11 +19,11 @@
 </defs></svg>
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="./index.html"><span class="brand-icon"><svg><use href="#waves"/></svg></span><span>SWIM<span class="accent">BAND</span><small>СЕКУНДОМЕР ДЛЯ ПЛАВАНИЯ</small></span></a>
-<span class="version"><span></span>Первый прототип</span>
+<span class="version"><span></span>Датчик поворотов · тест</span>
 </div></header>
 <main class="app">
 <section class="intro">
-<div><p class="eyebrow">НА ТРЕНИРОВКЕ</p><h1>Каждый заплыв —<br><span>своё время.</span></h1><p class="intro-copy">Выберите пловца и дистанцию. Дайте старт, зафиксируйте финиш и сохраните результат.</p></div>
+<div><p class="eyebrow">НА ТРЕНИРОВКЕ</p><h1>Каждый заплыв —<br><span>своё время.</span></h1><p class="intro-copy">Выберите длину бассейна. Браслет будет искать повороты по датчику и оценивать проплытую дистанцию.</p></div>
 <div class="intro-note"><svg><use href="#clock"/></svg><p>Ручной старт и финиш<small>Время измеряет плата</small></p></div>
 </section>
 <div class="mode-row"><div class="segments" role="group" aria-label="Источник времени"><button id="mode-band" type="button" aria-pressed="true">Браслет</button><button id="mode-demo" type="button" aria-pressed="false">Демо без платы</button></div><span id="mode-note">Результаты с вашего устройства</span></div>
@@ -34,10 +34,17 @@
 <div class="section-head"><h2 id="session-title"><span class="small-dot"></span>Текущий заплыв</h2><span id="session-state" class="state">ГОТОВ К СТАРТУ</span></div>
 <form id="swim-form" autocomplete="on">
 <div class="field"><label for="swimmer-name">Имя пловца</label><input id="swimmer-name" name="swimmer" type="text" placeholder="Например, Айша" maxlength="60" required autocomplete="name"></div>
-<div class="form-row"><div class="field"><label for="stroke">Стиль плавания</label><select id="stroke" name="stroke"><option value="free">Вольный стиль</option><option value="back">На спине</option><option value="breast">Брасс</option><option value="fly">Баттерфляй</option></select></div><div class="field"><label for="distance">Дистанция</label><select id="distance" name="distance"><option value="25">25 м</option><option value="50" selected>50 м</option><option value="100">100 м</option><option value="200">200 м</option><option value="400">400 м</option></select></div></div>
-</form>
+<div class="form-row"><div class="field"><label for="stroke">Стиль плавания</label><select id="stroke" name="stroke"><option value="free">Вольный стиль</option><option value="back">На спине</option><option value="breast">Брасс</option><option value="fly">Баттерфляй</option></select></div><div class="field"><label for="distance">План заплыва</label><select id="distance" name="distance"><option value="25">25 м</option><option value="50" selected>50 м</option><option value="100">100 м</option><option value="200">200 м</option><option value="400">400 м</option></select></div></div>
+<div class="turn-settings">
+<div class="form-row"><div class="field"><label for="pool-length">Длина бассейна</label><select id="pool-length"><option value="25">25 м</option><option value="50">50 м</option></select></div>
+<div class="field"><label for="mount">Крепление платы</label><select id="mount"><option value="W">На запястье</option><option value="B">На поясе / спине</option></select></div></div>
+<div class="field"><label for="minimum-length">Минимум секунд на одну длину</label><input id="minimum-length" type="number" min="4" max="60" step="1" value="8"><p class="microcopy">Защита от двойного срабатывания. Укажите время короче вашей самой быстрой длины.</p></div>
+</div></form>
+<div class="turn-metrics" aria-label="Результат датчика"><div><span>Найдено поворотов</span><strong id="turn-count">—</strong></div><div><span>Оценка дистанции</span><strong id="actual-distance">—</strong></div></div>
+<p id="turn-help" class="microcopy">Счётчик появится после подключения платы с IMU.</p>
+<div class="notice">Экспериментальный подсчёт. Гребки и повороты отличаются у разных пловцов — требуется проверка в бассейне. Незавершённые отрезки не измеряются.</div>
 <div class="timer-area"><div class="clock-face" aria-hidden="true"><svg viewBox="0 0 200 200"><circle class="clock-ring" cx="100" cy="100" r="89"/><g id="clock-ticks"></g><text x="100" y="38">0</text><text x="163" y="104">15</text><text x="100" y="170">30</text><text x="37" y="104">45</text><g id="clock-hand"><path d="M100 100V46"/><circle cx="100" cy="100" r="4"/></g></svg></div><div id="timer" class="timer" aria-label="Время заплыва">00:00.00</div><p id="timer-caption">Подключите браслет, чтобы начать</p></div>
-<div class="timer-actions"><button id="start" class="button start-button" type="button" disabled><span class="play-icon"></span>Старт</button><button id="finish" class="button finish-button" type="button" disabled><span class="stop-icon"></span>Финиш</button></div>
+<label class="final-check"><input id="finish-at-wall" type="checkbox"><span>Финиш у бортика: подтверждаю последнюю полную длину</span></label><p class="microcopy">Отметьте только в конце последней длины, если после неё не делали поворот. Иначе сайт учтёт только длины до найденных поворотов.</p><div class="timer-actions"><button id="start" class="button start-button" type="button" disabled><span class="play-icon"></span>Старт</button><button id="finish" class="button finish-button" type="button" disabled><span class="stop-icon"></span>Финиш</button></div>
 <p id="action-help" class="microcopy">Сначала подключите устройство и заполните имя пловца.</p>
 <button id="forget-pending" class="export-button" type="button" hidden>Снять ожидание заплыва</button><div class="last-result"><span>ПОСЛЕДНИЙ РЕЗУЛЬТАТ</span><strong id="last-time">—</strong><p id="last-detail">Ваш первый результат появится здесь</p></div>
 </section>
@@ -47,17 +54,17 @@
 <div class="device-row"><span class="device-mark"><svg><use href="#waves"/></svg></span><div><strong id="device-name">XIAO SwimBand</strong><p><span id="connection-dot" class="connection-dot"></span><span id="connection-label">Не подключён</span></p></div></div>
 <p id="connection-help" class="device-copy">Включите плату с новой прошивкой SwimBand. После подключения старт и финиш будут отправляться по Bluetooth.</p>
 <button id="connect" class="button connect-button" type="button">Подключить браслет</button>
-<p id="device-status" class="microcopy" role="status">Готов к подключению</p>
-<div id="firmware-hint" class="firmware-hint" hidden>На плате нужна новая прошивка SwimBand. Версия StepX для шагов с этим секундомером несовместима.</div>
+<p id="sensor-status" class="sensor-status" role="status">Датчик не подключён</p><button id="calibrate" type="button" class="export-button" disabled>Калибровать датчик</button><p id="device-status" class="microcopy" role="status">Готов к подключению</p>
+<div id="firmware-hint" class="firmware-hint" hidden>Нужна новая прошивка SwimBand v2 и датчик LSM6DS3. У обычной XIAO nRF52840 встроенного IMU нет; он есть у Sense.</div>
 </section>
-<section class="card how-card" id="how-to" aria-labelledby="how-title"><p class="eyebrow">ПЕРВЫЙ ЗАПУСК</p><h2 id="how-title">Подключение за три шага</h2><ol><li><span>01</span><div><strong>Загрузите прошивку</strong><p>Откройте файл в Arduino IDE и загрузите в XIAO nRF52840 с пакетом mbed-enabled.</p><a href="./SwimBandBracelet.ino" download="SwimBandBracelet.ino">Скачать прошивку .ino <svg><use href="#download"/></svg></a></div></li><li><span>02</span><div><strong>Откройте сайт в Bluefy</strong><p>На iPhone разрешите браузеру доступ к Bluetooth. В обычном Safari подключения BLE нет.</p><a href="https://apps.apple.com/app/id1492822055" target="_blank" rel="noopener noreferrer">Bluefy в App Store</a></div></li><li><span>03</span><div><strong>Выберите XIAO SwimBand</strong><p>Нажмите «Подключить браслет». Для первой проверки оставьте питание платы от USB.</p></div></li></ol></section>
-<div class="side-note"><span class="small-dot"></span><p>Первый тест — на столе.<small>Эта версия использует ручной старт и финиш. Автоматического подсчёта бассейнов в этой версии нет.</small></p></div>
+<section class="card how-card" id="how-to" aria-labelledby="how-title"><p class="eyebrow">ПЕРВЫЙ ЗАПУСК</p><h2 id="how-title">Подключение за три шага</h2><ol><li><span>01</span><div><strong>Загрузите прошивку</strong><p>Загрузите прошивку в XIAO nRF52840 Sense. Нужны библиотеки ArduinoBLE и Seeed Arduino LSM6DS3.</p><a href="./SwimBandBracelet.ino" download="SwimBandBracelet.ino">Скачать прошивку .ino <svg><use href="#download"/></svg></a></div></li><li><span>02</span><div><strong>Откройте сайт в Bluefy</strong><p>На iPhone разрешите браузеру доступ к Bluetooth. В обычном Safari подключения BLE нет.</p><a href="https://apps.apple.com/app/id1492822055" target="_blank" rel="noopener noreferrer">Bluefy в App Store</a></div></li><li><span>03</span><div><strong>Выберите XIAO SwimBand</strong><p>Нажмите «Подключить браслет». Держите плату неподвижно около 3 секунд для калибровки.</p></div></li></ol></section>
+<div class="side-note"><span class="small-dot"></span><p>Сначала проверьте датчик на столе.<small>Повороты ищет датчик на плате. Старт, финиш и подтверждение последней длины — вручную. Для воды нужен герметичный корпус.</small></p></div>
 </aside>
 </div>
-<section class="card history-card" aria-labelledby="history-title"><div class="section-head"><div><p class="eyebrow">ВАШ ПРОГРЕСС</p><h2 id="history-title">История заплывов</h2></div><button id="export" class="export-button" type="button" disabled><svg><use href="#download"/></svg>Скачать CSV</button></div><div class="history-summary"><span id="history-count">0 заплывов</span><span id="history-distance">0 м</span><span id="history-source">Данные браслета</span></div><div id="history-empty" class="empty-state"><span>≈</span><h3>Начните с первого заплыва</h3><p>После финиша здесь сохранятся имя пловца, стиль, дистанция и время.</p></div><div id="history-scroll" class="table-scroll" hidden><table><thead><tr><th scope="col">Пловец</th><th scope="col">Стиль и дистанция</th><th scope="col">Время</th><th scope="col">Сохранено</th></tr></thead><tbody id="history-body"></tbody></table></div><p class="microcopy">История хранится в этом браузере. Данные браслета и деморежима учитываются отдельно.</p></section>
-<footer><span>SWIM<span class="accent">BAND</span><small>Ручной секундомер для тренировок</small></span><a href="./README-SwimBand.md" target="_blank" rel="noopener">Инструкция и ограничения</a></footer>
+<section class="card history-card" aria-labelledby="history-title"><div class="section-head"><div><p class="eyebrow">ВАШ ПРОГРЕСС</p><h2 id="history-title">История заплывов</h2></div><button id="export" class="export-button" type="button" disabled><svg><use href="#download"/></svg>Скачать CSV</button></div><div class="history-summary"><span id="history-count">0 заплывов</span><span id="history-distance">0 м</span><span id="history-source">Данные браслета</span></div><div id="history-empty" class="empty-state"><span>≈</span><h3>Начните с первого заплыва</h3><p>После финиша здесь сохранятся имя пловца, стиль, дистанция и время.</p></div><div id="history-scroll" class="table-scroll" hidden><table><thead><tr><th scope="col">Пловец</th><th scope="col">Стиль и оценка дистанции</th><th scope="col">Время</th><th scope="col">Сохранено</th></tr></thead><tbody id="history-body"></tbody></table></div><p class="microcopy">История хранится в этом браузере. Данные браслета и деморежима учитываются отдельно.</p></section>
+<footer><span>SWIM<span class="accent">BAND</span><small>Экспериментальный счётчик поворотов</small></span><a href="./README-SwimBand.md" target="_blank" rel="noopener">Инструкция и ограничения</a></footer>
 </main>
 <div id="toast" role="status" class="toast" hidden></div>
-<script type="module" src="./app.js?v=swim1"></script>
+<script type="module" src="./swim2-app.js?v=turn2"></script>
 </body>
 </html>
